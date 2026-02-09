@@ -6,8 +6,10 @@ import { toast } from "sonner"
 
 export default function Form({ action, pasajero, disabled = false, textSubmit = "Enviar" }) {
     const formId = useId()
+    // ejercicio 9: useActionState para gestionar respuesta y estado pending
     const [state, faction, isPending] = useActionState(action, {})
 
+    // ejercicio 9: cerrar modal tras éxito
     useEffect(() => {
         if (state.success) {
             toast.success(state.success)

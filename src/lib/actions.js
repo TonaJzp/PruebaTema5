@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache"
 
 // ------------------------------ CONDUCTORES ------------------------------
 
+// ejercicio 9: prevState como primer argumento
 export async function insertarConductor(prevState, formData) {
     const nombre = formData.get('nombre')
     const telefono = formData.get('telefono')
