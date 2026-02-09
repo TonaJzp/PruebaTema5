@@ -2,7 +2,7 @@
 import { useRef } from 'react'
 // https://medium.com/@bomber.marek/how-to-use-dialog-in-react-easy-modals-tooltips-81e44d570c8a
 
-
+// El modal ya estaba configurado
 
 const Modal = ({ children, openElement }) => {
     const dialogRef = useRef(null);
