@@ -2,29 +2,19 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen min-w-screen grid place-items-center">
-      <h1 className="text-4xl font-extrabold text-blue-800">Escuela 2026</h1>
-
-      <div className="flex flex-col gap-4 font-bold text-white">
-        <Link
-          href="/grupos"
-          className="rounded-lg text-center text-2xl py-10 px-20 bg-radial-[at_20%_20%] from-white to-indigo-900 to-75% shadow-neutral-700 shadow-lg"
-        >
-          GRUPOS
+    <main className="flex flex-col gap-8 p-8">
+      <h1 className="text-4xl font-bold text-center">Transporte 2026</h1>
+      <div className="flex flex-col gap-4 items-center">
+        <Link href="/conductores" className="text-2xl text-blue-600 hover:underline">
+          Conductores
         </Link>
-        <Link
-          href="/asignaturas"
-          className="rounded-lg text-center text-2xl py-10 px-20 bg-radial-[at_20%_20%] from-white to-emerald-900 to-75% shadow-neutral-700 shadow-lg"
-        >
-          ASIGNATURAS
+        <Link href="/viajes" className="text-2xl text-blue-600 hover:underline">
+          Viajes
         </Link>
-        <Link
-          href="/estudiantes"
-          className="rounded-lg text-center text-2xl py-10 px-20 bg-radial-[at_20%_20%] from-white to-amber-900 to-75% shadow-neutral-700 shadow-lg"
-        >
-          ESTUDIANTES
+        <Link href="/pasajeros" className="text-2xl text-blue-600 hover:underline">
+          Pasajeros
         </Link>
       </div>
-    </div>
+    </main>
   );
 }
