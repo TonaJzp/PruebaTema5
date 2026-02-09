@@ -1,12 +1,10 @@
-
 'use client'
-import { RefreshCwIcon } from "lucide-react"
-import { useActionState, useId, useEffect } from "react"
+import { useActionState, useEffect, useId } from "react"
 import { toast } from "sonner"
 
 
 
-export default function Form({ action, estudiante, gruposIdNombre, asignaturasIdNombre, disabled = false, textSubmit = "Enviar" }) {
+export default function Form({ action, viaje, conductoresIdNombre, pasajerosIdNombre, disabled = false, textSubmit = "Enviar" }) {
     const formId = useId()
     const [state, faction, isPending] = useActionState(action, {})
 
@@ -22,54 +20,53 @@ export default function Form({ action, estudiante, gruposIdNombre, asignaturasId
 
     return (
         <form id={formId} action={faction} className="flex flex-col gap-2 border p-4 border-blue-400" >
-            <input type="hidden" name="id" value={estudiante?.id} />
+            <input type="hidden" name="id" value={viaje?.id} />
             <input
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                defaultValue={estudiante?.nombre}
+                type="datetime-local"
+                name="fecha_hora"
+                placeholder="Fecha y hora"
+                defaultValue={viaje?.fecha_hora?.toISOString().slice(0, 16) || ''}
                 disabled={disabled}
             />
             <input
                 type="text"
-                name="foto"
-                placeholder="Foto"
-                defaultValue={estudiante?.foto}
+                name="origen"
+                placeholder="Origen"
+                defaultValue={viaje?.origen}
                 disabled={disabled}
             />
             <input
                 type="text"
-                name="tutor_legal"
-                placeholder="Tutor legal"
-                defaultValue={estudiante?.tutor_legal}
+                name="destino"
+                placeholder="Destino"
+                defaultValue={viaje?.destino}
                 disabled={disabled}
             />
             <input
-                type="date"
-                name="fecha_nacimiento"
-                placeholder="Fecha de nacimiento"
-                defaultValue={estudiante?.fecha_nacimiento?.toISOString().split('T')[0] || '2000-01-01'}
+                type="number"
+                step="0.01"
+                name="precio_billete"
+                placeholder="Precio del billete"
+                defaultValue={viaje?.precio_billete}
                 disabled={disabled}
             />
 
 
-            {/* Usar Select o Radio, pero no ambos a la vez */}
-            {/* Select */}
             {disabled
-                ? <p>Grupo: {estudiante?.grupo?.nombre}</p>
+                ? <p>Conductor: {viaje?.conductor?.nombre}</p>
                 : <details>
-                    <summary>Grupo ({estudiante?.grupo?.nombre})</summary>
+                    <summary>Conductor ({viaje?.conductor?.nombre})</summary>
                     <select className="w-full p-2 border border-blue-400 rounded-md"
-                        name="grupoId"
-                        key={estudiante?.grupoId}
-                        defaultValue={estudiante?.grupoId}
+                        name="conductorId"
+                        key={viaje?.conductorId}
+                        defaultValue={viaje?.conductorId}
                         size={4}
                         disabled={disabled}
                     >
-                        <option value="">Seleccionar grupo</option>
-                        {gruposIdNombre.map((grupo) => (
-                            <option value={grupo.id} key={grupo.id}>
-                                {grupo.nombre}
+                        <option value="">Seleccionar conductor</option>
+                        {conductoresIdNombre.map((conductor) => (
+                            <option value={conductor.id} key={conductor.id}>
+                                {conductor.nombre}
                             </option>
                         ))}
                     </select>
@@ -77,38 +74,21 @@ export default function Form({ action, estudiante, gruposIdNombre, asignaturasId
             }
 
 
-            {/* Radio */}
-            {/* {disabled
-                ? <p>Grupo: {estudiante?.grupo?.nombre}</p>
-                : <details>
-                    <summary>Grupo ({estudiante?.grupo?.nombre})</summary>
-                    {gruposIdNombre?.map((grupo) => <div key={grupo.id}>
-                        {estudiante?.grupo?.id == grupo.id
-                            ? <input key={`radio-${grupo.id}`} type='radio' name='grupoId' value={grupo.id} defaultChecked />
-                            : <input type='radio' name='grupoId' value={grupo.id} />
-                        }
-                        {grupo.nombre}
-                    </div>)}
-                </details>
-            } */}
-
-
-            {/* Checkbox */}
             {disabled
-                ? <p>Asignaturas: {estudiante?.asignaturas?.map(a => a.nombre).join(', ')}</p>
+                ? <p>Pasajeros: {viaje?.pasajeros?.map(p => p.nombre).join(', ')}</p>
                 : <details>
-                    <summary>Asignaturas ({estudiante?.asignaturas?.map(a => a.nombre).join(', ')})</summary>
+                    <summary>Pasajeros ({viaje?.pasajeros?.map(p => p.nombre).join(', ')})</summary>
 
-                    {asignaturasIdNombre?.map((asignatura) => (
-                        <label key={asignatura.id} className='block'>
+                    {pasajerosIdNombre?.map((pasajero) => (
+                        <label key={pasajero.id} className='block'>
                             <input
                                 type='checkbox'
-                                name="asignaturas[]"
-                                value={asignatura.id}
-                                defaultChecked={estudiante?.asignaturas?.some(a => a.id == asignatura.id)}
+                                name="pasajeros[]"
+                                value={pasajero.id}
+                                defaultChecked={viaje?.pasajeros?.some(p => p.id == pasajero.id)}
                             />
 
-                            {asignatura.nombre}
+                            {pasajero.nombre}
                         </label>
                     ))}
                 </details>
@@ -117,17 +97,14 @@ export default function Form({ action, estudiante, gruposIdNombre, asignaturasId
 
             <button
                 type="submit"
-                className="flex justify-center items-center bg-blue-500 text-white p-2 rounded-md hover:cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
+                className="bg-blue-500 text-white p-2 rounded-md hover:cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
                 disabled={isPending}
             >
                 {isPending
-                    ? <RefreshCwIcon size={20} className="animate-spin" />
+                    ? <p className="animate-ping">Procesando...</p>
                     : textSubmit
                 }
             </button>
         </form >
     )
 }
-
-
-
