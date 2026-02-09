@@ -6,50 +6,44 @@ import { revalidatePath } from "next/cache"
 
 
 
+// ------------------------------ CONDUCTORES ------------------------------
 
-// ------------------------------ GRUPOS ------------------------------
-
-export async function insertarGrupo(prevState, formData) {
+export async function insertarConductor(prevState, formData) {
     const nombre = formData.get('nombre')
-    const tutor = formData.get('tutor')
-    const aula = formData.get('aula')
+    const telefono = formData.get('telefono')
 
 
     try {
-        await prisma.grupo.create({
+        await prisma.conductor.create({
             data: {
                 nombre,
-                tutor,
-                aula
+                telefono
             }
         })
-        revalidatePath('/grupos')
+        revalidatePath('/conductores')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
-        // return { error: error.message }
         return { error: error.message.split('\n').pop() }
     }
 }
 
 
 
-export async function modificarGrupo(prevState, formData) {
+export async function modificarConductor(prevState, formData) {
     const id = Number(formData.get('id'))
     const nombre = formData.get('nombre')
-    const tutor = formData.get('tutor')
-    const aula = formData.get('aula')
+    const telefono = formData.get('telefono')
 
     try {
-        await prisma.grupo.update({
+        await prisma.conductor.update({
             where: { id },
             data: {
                 nombre,
-                tutor,
-                aula
+                telefono
             }
         })
-        revalidatePath('/grupos')
+        revalidatePath('/conductores')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
@@ -59,14 +53,14 @@ export async function modificarGrupo(prevState, formData) {
 
 
 
-export async function eliminarGrupo(prevState, formData) {
+export async function eliminarConductor(prevState, formData) {
     const id = Number(formData.get('id'))
 
     try {
-        await prisma.grupo.delete({
+        await prisma.conductor.delete({
             where: { id },
         })
-        revalidatePath('/grupos')
+        revalidatePath('/conductores')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
@@ -77,107 +71,33 @@ export async function eliminarGrupo(prevState, formData) {
 
 
 
-// ------------------------------ ASIGNATURAS ------------------------------
+// ------------------------------ VIAJES ------------------------------
 
-export async function insertarAsignatura(prevState, formData) {
-    const nombre = formData.get('nombre')
-    const profesor = formData.get('profesor')
-    const horas_semana = Number(formData.get('horas_semana'))
+export async function insertarViaje(prevState, formData) {
+    const fecha_hora = new Date(formData.get('fecha_hora'))
+    const origen = formData.get('origen')
+    const destino = formData.get('destino')
+    const precio_billete = parseFloat(formData.get('precio_billete'))
 
-    try {
-        await prisma.asignatura.create({
-            data: {
-                nombre,
-                profesor,
-                horas_semana
-            }
-        })
-        revalidatePath('/asignaturas')
-        return { success: 'Operación realizada con éxito' }
-    } catch (error) {
-        console.log(error)
-        return { error: error.message.split('\n').pop() }
-    }
-}
+    const conductorId = formData.get('conductorId') ? Number(formData.get('conductorId')) : null
 
-
-
-export async function modificarAsignatura(prevState, formData) {
-    const id = Number(formData.get('id'))
-    const nombre = formData.get('nombre')
-    const profesor = formData.get('profesor')
-    const horas_semana = Number(formData.get('horas_semana'))
-
-    try {
-        await prisma.asignatura.update({
-            where: { id },
-            data: {
-                nombre,
-                profesor,
-                horas_semana
-            }
-        })
-        revalidatePath('/asignaturas')
-        return { success: 'Operación realizada con éxito' }
-    } catch (error) {
-        console.log(error)
-        return { error: error.message.split('\n').pop() }
-    }
-}
-
-
-
-export async function eliminarAsignatura(prevState, formData) {
-    const id = Number(formData.get('id'))
-
-    try {
-        await prisma.asignatura.delete({
-            where: { id },
-        })
-        revalidatePath('/asignaturas')
-        return { success: 'Operación realizada con éxito' }
-    } catch (error) {
-        console.log(error)
-        return { error: error.message.split('\n').pop() }
-    }
-}
-
-
-
-
-
-// ------------------------------ ESTUDIANTES ------------------------------
-
-export async function insertarEstudiante(prevState, formData) {
-    const nombre = formData.get('nombre')
-    const tutor_legal = formData.get('tutor_legal')
-    const fecha_nacimiento = new Date(formData.get('fecha_nacimiento'))
-    const foto = formData.get('foto')
-
-
-    // GRUPO - ESTUDIANTE (1:N)
-    const grupoId = formData.get('grupoId') ? Number(formData.get('grupoId')) : null  // Este valor puede ser nulo
-
-
-    // ESTUDIANTE - ASIGNATURAS (N:M)
-    const asignaturas = formData
-        .getAll('asignaturas[]')
+    const pasajeros = formData
+        .getAll('pasajeros[]')
         .map(id => ({ id: Number(id) }))
 
 
-
     try {
-        await prisma.estudiante.create({
+        await prisma.viaje.create({
             data: {
-                nombre,
-                tutor_legal,
-                fecha_nacimiento,
-                foto,
-                grupoId,
-                asignaturas: { connect: asignaturas }
+                fecha_hora,
+                origen,
+                destino,
+                precio_billete,
+                conductorId,
+                pasajeros: { connect: pasajeros }
             }
         })
-        revalidatePath('/estudiantes')
+        revalidatePath('/viajes')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
@@ -187,37 +107,33 @@ export async function insertarEstudiante(prevState, formData) {
 
 
 
-export async function modificarEstudiante(prevState, formData) {
+export async function modificarViaje(prevState, formData) {
     const id = Number(formData.get('id'))
-    const nombre = formData.get('nombre')
-    const tutor_legal = formData.get('tutor_legal')
-    const fecha_nacimiento = new Date(formData.get('fecha_nacimiento'))
-    const foto = formData.get('foto')
+    const fecha_hora = new Date(formData.get('fecha_hora'))
+    const origen = formData.get('origen')
+    const destino = formData.get('destino')
+    const precio_billete = parseFloat(formData.get('precio_billete'))
 
-    // GRUPO - ESTUDIANTE (1:N)
-    const grupoId = formData.get('grupoId') ? Number(formData.get('grupoId')) : null  // Este valor puede ser nulo
+    const conductorId = formData.get('conductorId') ? Number(formData.get('conductorId')) : null
 
-
-    // ESTUDIANTE - ASIGNATURAS  (N:M)
-    const asignaturas = formData
-        .getAll('asignaturas[]')
+    const pasajeros = formData
+        .getAll('pasajeros[]')
         .map(id => ({ id: Number(id) }))
 
 
-
     try {
-        await prisma.estudiante.update({
+        await prisma.viaje.update({
             where: { id },
             data: {
-                nombre,
-                tutor_legal,
-                fecha_nacimiento,
-                foto,
-                grupoId,
-                asignaturas: { set: asignaturas }
+                fecha_hora,
+                origen,
+                destino,
+                precio_billete,
+                conductorId,
+                pasajeros: { set: pasajeros }
             }
         })
-        revalidatePath('/estudiantes')
+        revalidatePath('/viajes')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
@@ -227,14 +143,14 @@ export async function modificarEstudiante(prevState, formData) {
 
 
 
-export async function eliminarEstudiante(prevState, formData) {
+export async function eliminarViaje(prevState, formData) {
     const id = Number(formData.get('id'))
 
     try {
-        await prisma.estudiante.delete({
+        await prisma.viaje.delete({
             where: { id },
         })
-        revalidatePath('/estudiantes')
+        revalidatePath('/viajes')
         return { success: 'Operación realizada con éxito' }
     } catch (error) {
         console.log(error)
@@ -244,3 +160,65 @@ export async function eliminarEstudiante(prevState, formData) {
 
 
 
+
+// ------------------------------ PASAJEROS ------------------------------
+
+export async function insertarPasajero(prevState, formData) {
+    const nombre = formData.get('nombre')
+    const bonobus = formData.get('bonobus') === 'on'
+
+
+    try {
+        await prisma.pasajero.create({
+            data: {
+                nombre,
+                bonobus
+            }
+        })
+        revalidatePath('/pasajeros')
+        return { success: 'Operación realizada con éxito' }
+    } catch (error) {
+        console.log(error)
+        return { error: error.message.split('\n').pop() }
+    }
+}
+
+
+
+export async function modificarPasajero(prevState, formData) {
+    const id = Number(formData.get('id'))
+    const nombre = formData.get('nombre')
+    const bonobus = formData.get('bonobus') === 'on'
+
+    try {
+        await prisma.pasajero.update({
+            where: { id },
+            data: {
+                nombre,
+                bonobus
+            }
+        })
+        revalidatePath('/pasajeros')
+        return { success: 'Operación realizada con éxito' }
+    } catch (error) {
+        console.log(error)
+        return { error: error.message.split('\n').pop() }
+    }
+}
+
+
+
+export async function eliminarPasajero(prevState, formData) {
+    const id = Number(formData.get('id'))
+
+    try {
+        await prisma.pasajero.delete({
+            where: { id },
+        })
+        revalidatePath('/pasajeros')
+        return { success: 'Operación realizada con éxito' }
+    } catch (error) {
+        console.log(error)
+        return { error: error.message.split('\n').pop() }
+    }
+}
