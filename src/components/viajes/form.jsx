@@ -3,7 +3,7 @@ import { useActionState, useEffect, useId } from "react"
 import { toast } from "sonner"
 
 
-
+// ejercicio 8: recibe conductoresIdNombre y pasajerosIdNombre
 export default function Form({ action, viaje, conductoresIdNombre, pasajerosIdNombre, disabled = false, textSubmit = "Enviar" }) {
     const formId = useId()
     const [state, faction, isPending] = useActionState(action, {})
@@ -51,7 +51,7 @@ export default function Form({ action, viaje, conductoresIdNombre, pasajerosIdNo
                 disabled={disabled}
             />
 
-
+            {/* ejercicio 8: selector de conductor */}
             {disabled
                 ? <p>Conductor: {viaje?.conductor?.nombre}</p>
                 : <details>
@@ -73,7 +73,7 @@ export default function Form({ action, viaje, conductoresIdNombre, pasajerosIdNo
                 </details>
             }
 
-
+            {/* ejercicio 8: selector de pasajeros */}
             {disabled
                 ? <p>Pasajeros: {viaje?.pasajeros?.map(p => p.nombre).join(', ')}</p>
                 : <details>
