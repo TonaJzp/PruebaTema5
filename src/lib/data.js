@@ -3,24 +3,24 @@
 import prisma from '@/lib/prisma'
 
 
-// ------------------------- GRUPOS ------------------------- 
+// ------------------------- CONDUCTORES ------------------------- 
 
 
-export async function obtenerGrupos() {
+export async function obtenerConductores() {
 
     try {
-        // await new Promise((resolve) => setTimeout(resolve, 1000))
-        const grupos = await prisma.grupo.findMany({
+        const conductores = await prisma.conductor.findMany({
             include: {
-                estudiantes: {
+                viajes: {
                     select: {
                         id: true,
-                        nombre: true
+                        origen: true,
+                        destino: true
                     }
                 }
             }
         })
-        return grupos
+        return conductores
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
@@ -28,19 +28,18 @@ export async function obtenerGrupos() {
 }
 
 
-export async function obtenerGrupo(id) {
+export async function obtenerConductor(id) {
 
     try {
-        // await new Promise((resolve) => setTimeout(resolve, 1000))
-        const grupo = await prisma.grupo.findUnique({
+        const conductor = await prisma.conductor.findUnique({
             where: {
                 id: Number(id)
             },
             include: {
-                estudiantes: true
+                viajes: true
             }
         })
-        return grupo
+        return conductor
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
@@ -48,16 +47,16 @@ export async function obtenerGrupo(id) {
 }
 
 
-export async function obtenerGruposIdNombre() {
+export async function obtenerConductoresIdNombre() {
 
     try {
-        const grupos = await prisma.grupo.findMany({
+        const conductores = await prisma.conductor.findMany({
             select: {
                 id: true,
                 nombre: true
             }
         })
-        return grupos
+        return conductores
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
@@ -66,86 +65,20 @@ export async function obtenerGruposIdNombre() {
 
 
 
-// ------------------------- ASIGNATURAS ------------------------- 
+// ------------------------- VIAJES ------------------------- 
 
-export async function obtenerAsignaturas() {
+export async function obtenerViajes() {
 
     try {
-        const asignaturas = await prisma.asignatura.findMany({
+        const viajes = await prisma.viaje.findMany({
             include: {
-                estudiantes: {
-                    select: {
-                        id: true,
-                        nombre: true
-                    }
-                }
-            }
-        })
-        return asignaturas
-    } catch (error) {
-        console.log(error.message.split('\n').pop())
-        throw new Error(error.message.split('\n').pop())
-    }
-}
-
-
-export async function obtenerAsignatura(id) {
-
-    try {
-        const asignatura = await prisma.asignatura.findUnique({
-            where: {
-                id: Number(id)
-            },
-            include: {
-                estudiantes: true
-            }
-        })
-        return asignatura
-    } catch (error) {
-        console.log(error.message.split('\n').pop())
-        throw new Error(error.message.split('\n').pop())
-    }
-}
-
-
-export async function obtenerAsignaturasIdNombre() {
-
-    try {
-        const asignaturas = await prisma.asignatura.findMany({
-            select: {
-                id: true,
-                nombre: true
-            }
-        })
-        return asignaturas
-    } catch (error) {
-        console.log(error.message.split('\n').pop())
-        throw new Error(error.message.split('\n').pop())
-    }
-}
-
-
-
-// ------------------------- ESTUDIANTES ------------------------- 
-
-export async function obtenerEstudiantes() {
-
-    try {
-        const estudiantes = await prisma.estudiante.findMany({
-            select: {
-                id: true,
-                nombre: true,
-                tutor_legal: true,
-                fecha_nacimiento: true,
-                foto: true,
-                grupoId: true,
-                grupo: {
+                conductor: {
                     select: {
                         id: true,
                         nombre: true
                     }
                 },
-                asignaturas: {
+                pasajeros: {
                     select: {
                         id: true,
                         nombre: true
@@ -153,8 +86,7 @@ export async function obtenerEstudiantes() {
                 }
             }
         })
-        console.log(estudiantes)
-        return estudiantes
+        return viajes
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
@@ -162,19 +94,19 @@ export async function obtenerEstudiantes() {
 }
 
 
-export async function obtenerEstudiante(id) {
+export async function obtenerViaje(id) {
 
     try {
-        const estudiante = await prisma.estudiante.findUnique({
+        const viaje = await prisma.viaje.findUnique({
             where: {
                 id: Number(id)
             },
             include: {
-                grupo: true,
-                asignaturas: true
+                conductor: true,
+                pasajeros: true
             }
         })
-        return estudiante
+        return viaje
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
@@ -182,16 +114,60 @@ export async function obtenerEstudiante(id) {
 }
 
 
-export async function obtenerEstudiantesIdNombre() {
+
+// ------------------------- PASAJEROS ------------------------- 
+
+export async function obtenerPasajeros() {
 
     try {
-        const estudiantes = await prisma.estudiante.findMany({
+        const pasajeros = await prisma.pasajero.findMany({
+            include: {
+                viajes: {
+                    select: {
+                        id: true,
+                        origen: true,
+                        destino: true
+                    }
+                }
+            }
+        })
+        return pasajeros
+    } catch (error) {
+        console.log(error.message.split('\n').pop())
+        throw new Error(error.message.split('\n').pop())
+    }
+}
+
+
+export async function obtenerPasajero(id) {
+
+    try {
+        const pasajero = await prisma.pasajero.findUnique({
+            where: {
+                id: Number(id)
+            },
+            include: {
+                viajes: true
+            }
+        })
+        return pasajero
+    } catch (error) {
+        console.log(error.message.split('\n').pop())
+        throw new Error(error.message.split('\n').pop())
+    }
+}
+
+
+export async function obtenerPasajerosIdNombre() {
+
+    try {
+        const pasajeros = await prisma.pasajero.findMany({
             select: {
                 id: true,
                 nombre: true
             }
         })
-        return estudiantes
+        return pasajeros
     } catch (error) {
         console.log(error.message.split('\n').pop())
         throw new Error(error.message.split('\n').pop())
