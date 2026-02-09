@@ -2,68 +2,65 @@
 import Link from 'next/link'
 import { use, useState } from 'react'
 import Modal from '@/components/modal'
-import Form from '@/components/grupos/form'
-import { eliminarGrupo, insertarGrupo, modificarGrupo } from '@/lib/actions'
+import Form from '@/components/pasajeros/form'
+import { eliminarPasajero, insertarPasajero, modificarPasajero } from '@/lib/actions'
 import { IconoInsertar, IconoModificar, IconoEliminar } from '@/components/icons'
 
 
-export default function Lista({ promesaGrupos }) {
+export default function Lista({ promesaPasajeros }) {
 
-    const dataGrupos = use(promesaGrupos)
+    const dataPasajeros = use(promesaPasajeros)
     const [propiedad, setPropiedad] = useState('nombre')
     const [orden, setOrden] = useState('')
     const [buscar, setBuscar] = useState('')
 
-    let grupos = dataGrupos
-    if (orden === 'asc') grupos = dataGrupos.toSorted((a, b) => a[propiedad].localeCompare(b[propiedad]))
-    if (orden === 'desc') grupos = dataGrupos.toSorted((a, b) => b[propiedad].localeCompare(a[propiedad]))
+    let pasajeros = dataPasajeros
+    if (orden === 'asc') pasajeros = dataPasajeros.toSorted((a, b) => a[propiedad].localeCompare(b[propiedad]))
+    if (orden === 'desc') pasajeros = dataPasajeros.toSorted((a, b) => b[propiedad].localeCompare(a[propiedad]))
 
-    if (buscar) grupos = grupos.filter((grupo) =>
-        grupo.nombre.toLowerCase().includes(buscar.toLowerCase())
-        || grupo.tutor.toLowerCase().includes(buscar.toLowerCase())
-        || grupo.aula.toLowerCase().includes(buscar.toLowerCase())
+    if (buscar) pasajeros = pasajeros.filter((pasajero) =>
+        pasajero.nombre.toLowerCase().includes(buscar.toLowerCase())
     )
 
 
     const Insertar = () =>
         <Modal openElement={<IconoInsertar />}>
-            <h2 className='text-2xl font-bold'>INSERTAR GRUPO</h2>
+            <h2 className='text-2xl font-bold'>INSERTAR PASAJERO</h2>
             <Form
-                action={insertarGrupo}
+                action={insertarPasajero}
                 textSubmit='Insertar'
             />
         </Modal>
 
 
-    const Editar = ({ grupo }) =>
+    const Editar = ({ pasajero }) =>
         <Modal openElement={<IconoModificar />}>
-            <h2 className='text-2xl font-bold'>ACTUALIZAR GRUPO</h2>
+            <h2 className='text-2xl font-bold'>ACTUALIZAR PASAJERO</h2>
             <Form
-                action={modificarGrupo}
+                action={modificarPasajero}
                 textSubmit='Actualizar'
-                grupo={grupo}
+                pasajero={pasajero}
             />
         </Modal>
 
 
-    const Eliminar = ({ grupo }) =>
+    const Eliminar = ({ pasajero }) =>
         <Modal openElement={<IconoEliminar />}>
-            <h2 className='text-2xl font-bold'>ELIMINAR GRUPO</h2>
+            <h2 className='text-2xl font-bold'>ELIMINAR PASAJERO</h2>
             <Form
-                action={eliminarGrupo}
+                action={eliminarPasajero}
                 textSubmit='Eliminar'
-                grupo={grupo}
+                pasajero={pasajero}
                 disabled
             />
         </Modal>
 
 
-    const Card = ({ grupo, children }) =>
+    const Card = ({ pasajero, children }) =>
         <div className='p-4 rounded-lg bg-blue-200'>
-            <Link href={`/grupos/${grupo.id}`} >
-                <p>Nombre de grupo: {grupo.nombre} </p>
-                <p>Tutor del grupo: {grupo.tutor}</p>
-                <p>Aula {grupo.aula}</p>
+            <Link href={`/pasajeros/${pasajero.id}`} >
+                <p>Nombre: {pasajero.nombre} </p>
+                <p>Bonobús: {pasajero.bonobus ? 'Sí' : 'No'}</p>
             </Link>
 
             <div className='flex gap-2 justify-end'>
@@ -102,8 +99,6 @@ export default function Lista({ promesaGrupos }) {
                         className="p-2 border rounded-md w-fit"
                     >
                         <option value="nombre">Nombre</option>
-                        <option value="tutor">Tutor</option>
-                        <option value="aula">Aula</option>
                     </select>
                 </fieldset>
 
@@ -115,13 +110,12 @@ export default function Lista({ promesaGrupos }) {
 
 
             <div className='grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-10'>
-                {grupos.map((grupo) =>
-                    <Card key={grupo.id} grupo={grupo}>
-                        <Editar grupo={grupo} />
-                        <Eliminar grupo={grupo} />
+                {pasajeros.map((pasajero) =>
+                    <Card key={pasajero.id} pasajero={pasajero}>
+                        <Editar pasajero={pasajero} />
+                        <Eliminar pasajero={pasajero} />
                     </Card>)}
             </div>
         </div >
     )
 }
-

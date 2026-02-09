@@ -1,13 +1,12 @@
-import ListaAsignaturas from '@/components/asignaturas/lista'
-import { obtenerAsignaturas } from '@/lib/data'
-import { Suspense } from 'react'
+import ListaConductores from '@/components/conductores/lista'
+import { obtenerConductores } from '@/lib/data'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 
+export default function PaginaConductores() {
 
-export default function PaginaAsignaturas() {
-
-    const promesaAsignaturas = obtenerAsignaturas()  // Promesa, no usamos AWAIT
+    const promesaConductores = obtenerConductores()
 
     return (
         <div className='p-4'>
@@ -15,18 +14,16 @@ export default function PaginaAsignaturas() {
             <div className='flex justify-center items-center gap-4 pb-4'>
                 <h1 className='text-4xl'>
                     <Link href="/" className="cursor-pointer hover:text-blue-600">
-                        Asignaturas
+                        Conductores
                     </Link>
                 </h1>
             </div>
 
             <Suspense fallback={<p className='text-2xl text-blue-400'>Cargando...</p>}>
-                <ListaAsignaturas
-                    promesaAsignaturas={promesaAsignaturas}
+                <ListaConductores
+                    promesaConductores={promesaConductores}
                 />
             </Suspense>
         </div>
     )
 }
-
-
