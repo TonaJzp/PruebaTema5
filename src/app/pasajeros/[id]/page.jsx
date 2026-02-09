@@ -1,41 +1,39 @@
 import BackButton from '@/components/back-button'
-import { obtenerGrupo } from '@/lib/data'
+import { obtenerPasajero } from '@/lib/data'
 import { Suspense, use } from 'react'
 
 
-async function PaginaGrupo({ params }) {
+async function PaginaPasajero({ params }) {
     const { id } = await params
 
-    const promesaGrupo = obtenerGrupo(id) // Promesa, no usamos AWAIT
+    const promesaPasajero = obtenerPasajero(id)
 
     return (
         <div>
             <BackButton className="cursor-pointer hover:text-blue-600">
-                <h1 className='text-4xl'>Grupo</h1>
+                <h1 className='text-4xl'>Pasajero</h1>
             </BackButton>
 
             <Suspense fallback={<p className='text-2xl text-blue-400'>Cargando...</p>}>
-                <Grupo promesaGrupo={promesaGrupo} />
+                <Pasajero promesaPasajero={promesaPasajero} />
             </Suspense>
 
         </div>
     )
 }
 
-export default PaginaGrupo
+export default PaginaPasajero
 
 
 
 
-
-function Grupo({ promesaGrupo }) {
-    const grupo = use(promesaGrupo)
+function Pasajero({ promesaPasajero }) {
+    const pasajero = use(promesaPasajero)
 
     return (
         <div className='p-4 md:p-8 border border-blue-400'>
-            <p>{grupo.nombre}</p>
-            <p>{grupo.tutor}</p>
-            <p>{grupo.aula}</p>
+            <p>Nombre: {pasajero.nombre}</p>
+            <p>Bonobús: {pasajero.bonobus ? 'Sí' : 'No'}</p>
         </div>
     )
 }

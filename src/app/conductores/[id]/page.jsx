@@ -1,41 +1,39 @@
 import BackButton from '@/components/back-button'
-import { obtenerAsignatura } from '@/lib/data'
+import { obtenerConductor } from '@/lib/data'
 import { Suspense, use } from 'react'
 
 
-async function PaginaAsignatura({ params }) {
+async function PaginaConductor({ params }) {
     const { id } = await params
 
-    const promesaAsignatura = obtenerAsignatura(id) // Promesa, no usamos AWAIT
+    const promesaConductor = obtenerConductor(id)
 
     return (
         <div>
             <BackButton className="cursor-pointer hover:text-blue-600">
-                <h1 className='text-4xl'>Asignatura</h1>
+                <h1 className='text-4xl'>Conductor</h1>
             </BackButton>
 
             <Suspense fallback={<p className='text-2xl text-blue-400'>Cargando...</p>}>
-                <Asignatura promesaAsignatura={promesaAsignatura} />
+                <Conductor promesaConductor={promesaConductor} />
             </Suspense>
 
         </div>
     )
 }
 
-export default PaginaAsignatura
+export default PaginaConductor
 
 
 
 
-
-function Asignatura({ promesaAsignatura }) {
-    const asignatura = use(promesaAsignatura)
+function Conductor({ promesaConductor }) {
+    const conductor = use(promesaConductor)
 
     return (
         <div className='p-4 md:p-8 border border-blue-400'>
-            <p>{asignatura.nombre}</p>
-            <p>{asignatura.profesor}</p>
-            <p>{asignatura.horas_semana}</p>
+            <p>Nombre: {conductor.nombre}</p>
+            <p>Teléfono: {conductor.telefono}</p>
         </div>
     )
 }
